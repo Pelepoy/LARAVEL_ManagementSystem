@@ -6,6 +6,7 @@ use App\Models\Students;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Intervention\Image\Facades\Image;
 
 class StudentsController extends Controller
 {
@@ -33,6 +34,33 @@ class StudentsController extends Controller
             "email" => ['required', 'email', Rule::unique('students', 'email')]
         ]);
 
+        if($request->hasFile('student_image')){
+
+            $request->validate([
+                "student_image" => 'mimes:jpeg,png,bmp,tiff,jfif | max:4096'
+            ]);
+
+            $filenameWithExtension = $request->file("student_image");
+            $filename = pathinfo($filenameWithExtension, PATHINFO_FILENAME);
+
+            $extension = $request->file("student_image")->getClientOriginalExtension();
+
+            $filenameToStore = $filename .'_'.time().'.'.$extension;
+
+            $smallThumbnail = $filename .'_'.time().'.'.$extension;
+
+            $request->file("student_image")->storeAs('public/student/', $filenameToStore);
+
+            $request->file("student_image")->storeAs('public/student/thumbnail', $smallThumbnail);
+
+            $thumbNail = 'storage/student/thumbnail/' . $smallThumbnail;
+
+            $this->createThumbnail($thumbNail, 150, 90);
+
+            $validated['student_image'] = $filenameToStore;
+
+        }
+
         $student = Students::create($validated);
         // can supply email verification, payment and etc.
         $student->save();
@@ -56,7 +84,34 @@ class StudentsController extends Controller
             "email" => ['required', 'email']
         ]);
 
-        $student->update($validated);
+
+        if($request->hasFile('student_image')){
+
+            $request->validate([
+               "student_image" => 'mimes:jpeg,png,bmp,tiff,jfif | max:4096'
+            ]);
+
+            $filenameWithExtension = $request->file("student_image");
+            $filename = pathinfo($filenameWithExtension, PATHINFO_FILENAME);
+
+            $extension = $request->file("student_image")->getClientOriginalExtension();
+
+            $filenameToStore = $filename .'_'.time().'.'.$extension;
+
+            $smallThumbnail = $filename .'_'.time().'.'.$extension;
+
+            $request->file("student_image")->storeAs('public/student/', $filenameToStore);
+
+            $request->file("student_image")->storeAs('public/student/thumbnail', $smallThumbnail);
+
+            $thumbNail = 'storage/student/thumbnail/' . $smallThumbnail;
+
+            $this->createThumbnail($thumbNail, 150, 90);
+
+            $validated['student_image'] = $filenameToStore;
+
+        }
+       $student->update($validated);
 
         return redirect('/')->with('message', 'Data was successfully updated');
     }
@@ -65,5 +120,13 @@ class StudentsController extends Controller
     {
         $student->delete();
         return redirect('/')->with('message', 'Data was successfully deleted');
+    }
+
+    public function createThumbnail($path, $width, $height)
+    {
+        $img = Image::make($path)->resize($width, $height, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->save($path);
     }
 }

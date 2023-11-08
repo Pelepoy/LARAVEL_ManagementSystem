@@ -13,12 +13,12 @@
         {{--        <p class="text-gray-500 pt-2 text-center">Please sign up new account <a href="/register" class="text-gray-500 font-bold hover:text-cyan-500">here </a> :)</p>--}}
     </section>
     <section class="mt-8">
-        <form action="/add/student" method="POST" class="flex flex-col">
+        <form action="/add/student" method="POST" enctype="multipart/form-data"  class="flex flex-col">
             @csrf
             <div class="mb-6 pt-3 rounded bg-gray-100">
                 <label for="first_name" class="block text-gray-600 text-sm font-bold mb-2 ml-3">First Name</label>
                 <input type="text" name="first_name" class="bg-gray-100 rounded w-full text-gray-700 focus:outline-none
-                border-b-4 border-gray-400 px-3" value="{{old('first_name')}}">
+                border-b-4 border-gray-400 px-3" autocomplete="off" value="{{old('first_name')}}">
                 @error('first_name')
                 <p class="text-sm text-red-500">{{ $message }}</p>
                 @enderror
@@ -26,7 +26,7 @@
             <div class="mb-6 pt-3 rounded bg-gray-100">
                 <label for="last_name" class=" block text-gray-600 text-sm font-bold mb-2 ml-3">Last Name</label>
                 <input type="text" name="last_name" class="bg-gray-100 rounded w-full text-gray-700 focus:outline-none
-                border-b-4 border-gray-400 px-3" value="{{old('last_name')}}">
+                border-b-4 border-gray-400 px-3" autocomplete="off" value="{{old('last_name')}}">
                      @error('last_name')
                         <p class="text-sm text-red-500">{{ $message }}</p>
                     @enderror
@@ -34,7 +34,7 @@
             <div class="mb-6 pt-3 rounded bg-gray-100">
                 <label for="gender" class=" block text-gray-600 text-sm font-bold mb-2 ml-3">Gender</label>
                 <select type="text" name="gender" class="bg-gray-100 rounded w-full text-gray-700 focus:outline-none
-                border-b-4 border-gray-400 px-2">
+                border-b-4 border-gray-400 px-2" >
                     <option value="" {{old('gender') !== " " ? 'selected' : ''}}  class=""></option>
                     <option value="Male" {{old('gender') === "Male" ? 'selected' : ''}}>Male</option>
                     <option value="Female" {{old('gender') === "Female" ? 'selected' : ''}}>Female</option>
@@ -46,7 +46,7 @@
             <div class="mb-6 pt-3 rounded bg-gray-100">
                 <label for="age" class="block text-gray-600 text-sm font-bold mb-2 ml-3">Age</label>
                 <input type="number" name="age" class="bg-gray-100 rounded w-full text-gray-700 focus:outline-none
-                border-b-4 border-gray-400 px-3" value="{{old('age')}}">
+                border-b-4 border-gray-400 px-3" autocomplete="off" value="{{old('age')}}">
                     @error('age')
                         <p class=" text-sm text-red-500"> {{ $message }} </p>
                     @enderror
@@ -54,10 +54,18 @@
             <div class="mb-6 pt-3 rounded bg-gray-100">
                 <label for="email" class="block text-gray-600 text-sm font-bold mb-2 ml-3">Email</label>
                 <input type="email" name="email" class="bg-gray-100 rounded w-full text-gray-700 focus:outline-none
-                border-b-4 border-gray-400 px-3" value="{{old('email')}}">
+                border-b-4 border-gray-400 px-3" autocomplete="off" value="{{old('email')}}">
                     @error('email')
                         <p class=" text-sm text-red-500">{{ $message }}</p>
                     @enderror
+            </div>
+            <div class="mb-6 pt-3 rounded bg-gray-100">
+                <label for="student_image" class="block text-gray-600 text-sm font-bold mb-2 ml-3">Student Image</label>
+                <input type="file" name="student_image" class="bg-gray-100 rounded w-full text-gray-700 focus:outline-none
+                border-b-4 border-gray-400 px-3" autocomplete="off">
+                @error('student_image')
+                <p class=" text-sm text-red-500">{{ $message }}</p>
+                @enderror
             </div>
             <button type="submit" class="bg-gray-600 hover:bg-gray-100 text-white font-bold py-2 rounded
                 shadow-lg hover:text-black hover:shadow-xl transition duration-200">Add New

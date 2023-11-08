@@ -16,6 +16,9 @@
             <thead class="text-sx text gray-700 uppercase bg-gray-50 ">
             <tr>
                 <th scope="col" class="py-3 px-6 rounded">
+
+                </th>
+                <th scope="col" class="py-3 px-6 rounded">
                     First Name
                 </th>
                 <th scope="col" class="py-3 px-6">
@@ -38,6 +41,16 @@
             <tbody>
             @foreach($students as $student)
                 <tr class="bg-gray-600 border-b-4 border-gray-400 text-white">
+                    @php
+                        $seed = $student->first_name . "%20" . $student->last_name;
+                        $default_profile = "https://api.dicebear.com/7.x/initials/svg?seed=" . $seed;
+                    @endphp
+
+                    <td class="">
+                        <img
+                            src="{{ $student->student_image ? asset("storage/student/thumbnail/".$student->student_image) :  $default_profile }}"
+                            alt="">
+                    </td>
                     <td class="py-4 px-6">
                         {{ $student->first_name }}
                     </td>
@@ -54,7 +67,8 @@
                         {{ $student->email }}
                     </td>
                     <td class="py-4 px-6">
-                        <a href="/student/{{ $student->id }}" class="bg-sky-500 text-white px-4 py-2 rounded hover:bg-sky-600">view</a>
+                        <a href="/student/{{ $student->id }}"
+                           class="bg-sky-500 text-white px-4 py-2 rounded hover:bg-sky-600">view</a>
                     </td>
 
                 </tr>

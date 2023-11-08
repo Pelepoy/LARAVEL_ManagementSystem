@@ -13,9 +13,17 @@
         {{--        <p class="text-gray-500 pt-2 text-center">Please sign up new account <a href="/register" class="text-gray-500 font-bold hover:text-cyan-500">here </a> :)</p>--}}
     </section>
     <section class="mt-8">
-        <form action="/student/{{ $student->id }}" method="POST" class="flex flex-col">
+        <form action="/student/{{ $student->id }}" method="POST" class="flex flex-col" enctype="multipart/form-data">
             @method('PUT')
             @csrf
+            <div class="flex justify-center items-center my-4">
+                @php
+                    $seed = $student->first_name. "%20" .$student->last_name;
+                    $default_profile = "https://api.dicebear.com/7.x/initials/svg?seed=" . $seed
+                @endphp
+                    <img class="w-[445px] h-[445px]" src="{{ $student->student_image ? asset("storage/student/".$student->student_image)
+                    : $default_profile }}">
+            </div>
             <div class="mb-6 pt-3 rounded bg-gray-100">
                 <label for="first_name" class="block text-gray-600 text-sm font-bold mb-2 ml-3">First Name</label>
                 <input type="text" name="first_name" class="bg-gray-100 rounded w-full text-gray-700 focus:outline-none
@@ -59,6 +67,15 @@
                 @error('email')
                 <p class=" text-sm text-red-500">{{ $message }}</p>
                 @enderror
+
+                <div class="mb-6 pt-3 rounded bg-gray-100">
+                    <label for="student_image" class="block text-gray-600 text-sm font-bold mb-2 ml-3">Student Image</label>
+                    <input type="file" name="student_image" class="bg-gray-100 rounded w-full text-gray-700 focus:outline-none
+                border-b-4 border-gray-400 px-3" value="{{ $student->student_image }}">
+                    @error('student_image')
+                    <p class=" text-sm text-red-500">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
             <button type="submit" class="bg-sky-500 hover:bg-gray-100 text-white font-bold py-2 rounded
                 shadow-lg hover:text-black hover:shadow-xl transition duration-200 mb-2">Update
